@@ -19,7 +19,7 @@ If you want to use the i18n translation function in each pages, you need to add 
 Then run the following command to install the package.
 
 ```bash
-pnpm install
+yarn install
 ```
 
 ## Manage translations

@@ -79,8 +79,8 @@ the build speed and development experience by using Vite and Turborepo.
 2. Ensure your node version is >= than in `.nvmrc` file, recommend to use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#intro)
 3. Edit `/packages/i18n/locales/`{your locale(s)}/`messages.json`
 4. In the objects `extensionDescription` and `extensionName`, change the `message` fields (leave `description` alone)
-5. Install pnpm globally: `npm install -g pnpm`
-6. Run `pnpm install`
+5. Install yarn globally: `npm install -g yarn`
+6. Run `yarn install`
 7. Check if you have that configuration in your IDE/Editor:
     - <b>VS Code</b>:
         - Installed [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
@@ -94,7 +94,7 @@ the build speed and development experience by using Vite and Turborepo.
       - Configured [Prettier](https://prettier.io/docs/en/webstorm.html)
       - Optional, but useful `File | Settings | Tools | Actions on Save`\
       -> `Optimize imports` and `Reformat code`
-8. Run `pnpm update-version <version>` for change the `version` to the desired version of your extension.
+8. Run `yarn update-version <version>` for change the `version` to the desired version of your extension.
 
 > [!IMPORTANT]
 > On Windows, make sure you have WSL enabled and Linux distribution (e.g. Ubuntu) installed on WSL.
@@ -106,9 +106,9 @@ the build speed and development experience by using Vite and Turborepo.
 ### For Chrome: <a name="installation-chrome"></a>
 
 1. Run:
-    - Dev: `pnpm dev` (on Windows, you should run as administrator;
+    - Dev: `yarn dev` (on Windows, you should run as administrator;
       see [issue#456](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/issues/456))
-    - Prod: `pnpm build`
+    - Prod: `yarn build`
 2. Open in browser - `chrome://extensions`
 3. Check - <kbd>Developer mode</kbd>
 4. Click - <kbd>Load unpacked</kbd> in the upper left corner
@@ -117,8 +117,8 @@ the build speed and development experience by using Vite and Turborepo.
 ### For Firefox: <a name="installation-firefox"></a>
 
 1. Run:
-    - Dev: `pnpm dev:firefox`
-    - Prod: `pnpm build:firefox`
+    - Dev: `yarn dev:firefox`
+    - Prod: `yarn build:firefox`
 2. Open in browser - `about:debugging#/runtime/this-firefox`
 3. Click - <kbd>Load Temporary Add-on...</kbd> in the upper right corner
 4. Select the `./dist/manifest.json` file from the boilerplate project
@@ -131,11 +131,11 @@ the build speed and development experience by using Vite and Turborepo.
 
 ### For root: <a name="install-dependency-for-root"></a>
 
-1. Run `pnpm i <package> -w`
+1. Run `yarn add <package> -W`
 
 ### For module: <a name="install-dependency-for-module"></a>
 
-1. Run `pnpm i <package> -F <module name>`
+1. Run `yarn workspace <module name> add <package>`
 
 `package` - Name of the package you want to install e.g. `nodemon` \
 `module-name` - You can find it inside each `package.json` under the key `name`, e.g. `@extension/content-script`, you
@@ -205,10 +205,10 @@ Some shared packages:
 
 Other useful packages:
 
-- `zipper` - run `pnpm zip` to pack the `dist` folder into `extension-YYYYMMDD-HHmmss.zip` inside the newly created
+- `zipper` - run `yarn zip` to pack the `dist` folder into `extension-YYYYMMDD-HHmmss.zip` inside the newly created
   `dist-zip`
-- `module-manager` - run `pnpm module-manager` to enable/disable modules
-- `e2e` - run `pnpm e2e` for end-to-end tests of your zipped extension on different browsers
+- `module-manager` - run `yarn module-manager` to enable/disable modules
+- `e2e` - run `yarn e2e` for end-to-end tests of your zipped extension on different browsers
 
 ## Troubleshooting
 
@@ -216,11 +216,11 @@ Other useful packages:
 
 If saving source files doesn't cause the extension HMR code to trigger a reload of the browser page, try this:
 
-1. Ctrl+C the development server and restart it (`pnpm run dev`)
+1. Ctrl+C the development server and restart it (`yarn dev`)
 2. If you get a [`grpc` error](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/issues/612),
-   [kill the
+   [   kill the
    `turbo` process](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/issues/612#issuecomment-2518982339)
-   and run `pnpm dev` again.
+   and run `yarn dev` again.
 
 ### Imports not resolving correctly
 

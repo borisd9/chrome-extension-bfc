@@ -7,34 +7,34 @@ Module manager is a tool to manage modules in a project. It can be used to delet
 ### On Root
 
 ```bash
-$ pnpm module-manager
+$ yarn module-manager
 ```
 
 OR
 
 ```bash
-pnpm module-manager -d popup
+yarn module-manager -d popup
 ```
 
 ### On Module
 
 ```bash
-$ pnpm start
+$ yarn start
 ```
 
 OR
 
 ```bash
-pnpm start -d popup
+yarn start -d popup
 ```
 
 > [!NOTE]  
 > For complete info about CLI support run:
-> `pnpm module-manager --help`
+> `yarn module-manager --help`
 
 > [!IMPORTANT]
 > If you want to remove all tests, and something else with one command, you need to set `tests` as first argument like:
-> `pnpm module-manager -d tests popup ...`
+> `yarn module-manager -d tests popup ...`
 
 ### Choose a tool
 

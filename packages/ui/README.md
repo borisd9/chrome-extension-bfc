@@ -23,7 +23,7 @@ Add the following to the dependencies in `package.json`.
 Then, run:
 
 ```shell
-pnpm install
+yarn install
 ```
 
 Add the following to the `tailwind.config.ts` file.
@@ -126,7 +126,7 @@ You can refer to the this [manual guide](https://ui.shadcn.com/docs/installation
     Run the following command from the root of your project:
     
     ```shell
-    pnpm add tailwindcss-animate class-variance-authority tailwind-merge lucide-react -F ui
+    yarn workspace ui add tailwindcss-animate class-variance-authority tailwind-merge lucide-react
     ```
 
 3. Edit `with-ui.ts` in `lib` folder
@@ -297,7 +297,7 @@ You can refer to the this [manual guide](https://ui.shadcn.com/docs/installation
     Finally, run this command from the root of your project to add the button component:
     
     ```shell
-    pnpm dlx shadcn@latest add button -c ./packages/ui
+    yarn dlx shadcn@latest add button -c ./packages/ui
     ```
     
     This will add the shadcn button component to your UI package.

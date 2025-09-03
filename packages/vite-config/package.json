@@ -9,9 +9,9 @@
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "scripts": {
-    "clean:node_modules": "pnpx rimraf node_modules",
-    "clean:bundle": "pnpx rimraf dist",
-    "clean": "pnpm clean:bundle && pnpm clean:node_modules",
+    "clean:node_modules": "yarn dlx rimraf node_modules",
+    "clean:bundle": "yarn dlx rimraf dist",
+    "clean": "yarn clean:bundle && yarn clean:node_modules",
     "ready": "tsc -b"
   },
   "dependencies": {

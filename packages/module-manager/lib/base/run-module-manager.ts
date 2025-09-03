@@ -36,12 +36,12 @@ export const runModuleManager = async (moduleName?: ModuleNameType, action?: Cli
   writeFileSync(manifestPath, updatedManifest);
 
   if (isLastLap) {
-    execSync('pnpm i', {
+    execSync('yarn install', {
       stdio: 'inherit',
       cwd: resolve('..', '..'),
     });
 
-    execSync('pnpm -F chrome-extension lint:fix', {
+    execSync('yarn workspace chrome-extension lint:fix', {
       stdio: 'inherit',
       cwd: resolve('..', '..'),
     });

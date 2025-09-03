@@ -9,13 +9,13 @@
     "dist/**"
   ],
   "scripts": {
-    "clean:node_modules": "pnpx rimraf node_modules",
+    "clean:node_modules": "yarn dlx rimraf node_modules",
     "clean:turbo": "rimraf .turbo",
-    "clean": "pnpm clean:turbo && pnpm clean:node_modules",
+    "clean": "yarn clean:turbo && yarn clean:node_modules",
     "build": "tsx build.mts",
     "dev": "tsx build.mts",
     "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
+    "lint:fix": "yarn lint --fix",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "type-check": "tsc --noEmit"
   },
@@ -24,9 +24,9 @@
     "@extension/ui": "workspace:*"
   },
   "devDependencies": {
-    "@extension/tsconfig": "workspace:*",
-    "@extension/vite-config": "workspace:*",
     "@extension/hmr": "workspace:*",
-    "@extension/shared": "workspace:*"
+    "@extension/shared": "workspace:*",
+    "@extension/tsconfig": "workspace:*",
+    "@extension/vite-config": "workspace:*"
   }
 }

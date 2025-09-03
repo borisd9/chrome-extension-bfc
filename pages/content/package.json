@@ -10,20 +10,20 @@
   ],
   "scripts": {
     "clean:bundle": "rimraf dist",
-    "clean:node_modules": "pnpx rimraf node_modules",
+    "clean:node_modules": "yarn dlx rimraf node_modules",
     "clean:turbo": "rimraf .turbo",
-    "clean": "pnpm clean:bundle && pnpm clean:turbo && pnpm clean:node_modules",
+    "clean": "yarn clean:bundle && yarn clean:turbo && yarn clean:node_modules",
     "build": "tsx build.mts",
     "dev": "tsx build.mts",
     "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
+    "lint:fix": "yarn lint --fix",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@extension/env": "workspace:*",
     "@extension/shared": "workspace:*",
-    "@extension/storage": "workspace:*",
-    "@extension/env": "workspace:*"
+    "@extension/storage": "workspace:*"
   },
   "devDependencies": {
     "@extension/hmr": "workspace:*",

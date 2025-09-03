@@ -7,9 +7,9 @@
   "type": "module",
   "scripts": {
     "e2e": "wdio run config/wdio.browser.conf.ts",
-    "clean:node_modules": "pnpx rimraf node_modules",
-    "clean:turbo": "pnpx rimraf .turbo",
-    "clean": "pnpm clean:turbo && pnpm clean:node_modules"
+    "clean:node_modules": "yarn dlx rimraf node_modules",
+    "clean:turbo": "yarn dlx rimraf .turbo",
+    "clean": "yarn clean:turbo && yarn clean:node_modules"
   },
   "devDependencies": {
     "@extension/env": "workspace:*",
