@@ -605,8 +605,8 @@ const SidePanel = () => {
   const getEventMappings = (eventId: string): EventMapping[] =>
     mappings.filter(mapping => mapping.eventId === eventId && mapping.url === currentUrl);
 
-  const handleRemoveMapping = async (eventId: string) => {
-    await biEventsStorage.removeMapping(eventId, currentUrl);
+  const handleRemoveMapping = async (eventId: string, elementSelector?: string) => {
+    await biEventsStorage.removeMapping(eventId, currentUrl, elementSelector);
   };
 
   const toggleEventExpansion = (eventId: string) => {
@@ -915,7 +915,7 @@ const SidePanel = () => {
                                         👁
                                       </button>
                                       <button
-                                        onClick={() => handleRemoveMapping(event.evid)}
+                                        onClick={() => handleRemoveMapping(event.evid, mapping.element.selector)}
                                         className={cn(
                                           'flex-shrink-0 rounded px-2 py-1 text-xs font-medium',
                                           isLight

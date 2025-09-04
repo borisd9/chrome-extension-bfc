@@ -171,10 +171,17 @@ const biEventsStorage = {
       };
     });
   },
-  removeMapping: async (eventId: string, url: string) => {
+  removeMapping: async (eventId: string, url: string, elementSelector?: string) => {
     await storage.set(currentState => ({
       ...currentState,
-      mappings: currentState.mappings.filter(mapping => !(mapping.eventId === eventId && mapping.url === url)),
+      mappings: currentState.mappings.filter(mapping => {
+        // If elementSelector is provided, remove only the specific mapping
+        if (elementSelector) {
+          return !(mapping.eventId === eventId && mapping.url === url && mapping.element.selector === elementSelector);
+        }
+        // Otherwise, remove all mappings for the event and URL (legacy behavior)
+        return !(mapping.eventId === eventId && mapping.url === url);
+      }),
     }));
   },
   cancelSelection: async () => {
