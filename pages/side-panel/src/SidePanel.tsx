@@ -152,6 +152,72 @@ const startElementSelection = (eventId: string) => {
       return `/html${path}`;
     };
 
+    // Generate full path with data-hooks from root to target element
+    const getFullPathWithDataHooks = (el: Element): string => {
+      const pathElements: string[] = [];
+      let current: Element | null = el;
+
+      // Collect all elements from target up to html
+      const elements: Element[] = [];
+      while (current && current !== document.documentElement) {
+        elements.unshift(current); // Add to beginning to maintain order from root to target
+        current = current.parentElement;
+      }
+
+      // Add html element at the beginning
+      if (document.documentElement) {
+        elements.unshift(document.documentElement);
+      }
+
+      // Build path with data-hooks
+      elements.forEach(elem => {
+        const tag = elem.tagName.toLowerCase();
+        const elemDataHook = elem.getAttribute('data-hook');
+        const elemId = elem.id;
+
+        let pathPart = tag;
+
+        // Add identifier in order of priority: id, data-hook, class
+        if (elemId) {
+          pathPart += `#${elemId}`;
+        } else if (elemDataHook) {
+          pathPart += `[data-hook="${elemDataHook}"]`;
+        } else if (elem.className?.toString().trim()) {
+          const classes = elem.className.toString().trim().split(/\s+/).slice(0, 2); // Limit to first 2 classes to avoid overly long selectors
+          pathPart += `.${classes.join('.')}`;
+        }
+
+        pathElements.push(pathPart);
+      });
+
+      return pathElements.join(' > ');
+    };
+
+    // Generate array of all data-hooks in the path
+    const getAllDataHooksInPath = (el: Element): Array<{ tagName: string; dataHook: string; level: number }> => {
+      const dataHooks: Array<{ tagName: string; dataHook: string; level: number }> = [];
+      let current: Element | null = el;
+      let level = 0;
+
+      // Traverse up the DOM tree
+      while (current && current !== document.documentElement) {
+        const currentDataHook = current.getAttribute('data-hook');
+        if (currentDataHook) {
+          dataHooks.unshift({
+            // Add to beginning to maintain order from root to target
+            tagName: current.tagName.toLowerCase(),
+            dataHook: currentDataHook,
+            level,
+          });
+        }
+        current = current.parentElement;
+        level++;
+      }
+
+      return dataHooks;
+    };
+
+    // Original simple selector for backwards compatibility
     let selector = tagName;
     if (id) selector += `#${id}`;
     else if (dataHook) selector += `[data-hook="${dataHook}"]`;
@@ -159,6 +225,8 @@ const startElementSelection = (eventId: string) => {
 
     return {
       selector,
+      fullPath: getFullPathWithDataHooks(element),
+      dataHooksPath: getAllDataHooksInPath(element),
       xpath: getXPath(element),
       tagName,
       className: className || undefined,
@@ -784,6 +852,7 @@ const SidePanel = () => {
                                 <div className="space-y-2">
                                   <div className="flex items-start justify-between gap-2">
                                     <div className="min-w-0 flex-1">
+                                      {/* Original selector (kept for compatibility) */}
                                       <p
                                         className={cn(
                                           'break-all font-mono text-xs',
@@ -795,6 +864,32 @@ const SidePanel = () => {
                                         {mapping.element.className &&
                                           `.${mapping.element.className.split(' ').join('.')}`}
                                       </p>
+
+                                      {/* Data-hooks path */}
+                                      {mapping.element.dataHooksPath && mapping.element.dataHooksPath.length > 0 && (
+                                        <div className="mt-2">
+                                          <p
+                                            className={cn(
+                                              'text-xs font-semibold',
+                                              isLight ? 'text-green-700' : 'text-green-300',
+                                            )}>
+                                            Data-hooks path ({mapping.element.dataHooksPath.length}):
+                                          </p>
+                                          <div className="space-y-1">
+                                            {mapping.element.dataHooksPath.map((hook, index) => (
+                                              <p
+                                                key={index}
+                                                className={cn(
+                                                  'break-all pl-2 font-mono text-xs',
+                                                  isLight ? 'text-green-600' : 'text-green-400',
+                                                )}>
+                                                {`${hook.tagName}[data-hook="${hook.dataHook}"] (level ${hook.level})`}
+                                              </p>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+
                                       {mapping.element.text && (
                                         <p
                                           className={cn(

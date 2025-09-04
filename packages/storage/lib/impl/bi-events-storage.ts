@@ -17,6 +17,8 @@ interface ElementSelector {
   id?: string;
   dataHook?: string;
   text?: string;
+  fullPath?: string;
+  dataHooksPath?: Array<{ tagName: string; dataHook: string; level: number }>;
 }
 
 interface EventMapping {
