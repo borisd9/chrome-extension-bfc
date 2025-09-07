@@ -217,6 +217,68 @@ const startElementSelection = (eventId: string) => {
       return dataHooks;
     };
 
+    // Generate HTML radius (5 levels above and below)
+    const getHtmlRadius = (el: Element) => {
+      const radius = {
+        above: [] as Array<{ tagName: string; id?: string; className?: string; dataHook?: string; level: number }>,
+        target: {
+          tagName: el.tagName.toLowerCase(),
+          id: el.id || undefined,
+          className: el.className?.toString().trim() || undefined,
+          dataHook: el.getAttribute('data-hook') || undefined,
+          text: el.textContent?.trim().slice(0, 50) || undefined,
+        },
+        below: [] as Array<{
+          tagName: string;
+          id?: string;
+          className?: string;
+          dataHook?: string;
+          level: number;
+          parentLevel: number;
+        }>,
+      };
+
+      // Collect 5 levels above
+      let current = el.parentElement;
+      let level = 1;
+      while (current && level <= 5 && current !== document.documentElement) {
+        radius.above.unshift({
+          tagName: current.tagName.toLowerCase(),
+          id: current.id || undefined,
+          className: current.className?.toString().trim() || undefined,
+          dataHook: current.getAttribute('data-hook') || undefined,
+          level,
+        });
+        current = current.parentElement;
+        level++;
+      }
+
+      // Collect 5 levels below (recursive function)
+      const collectBelow = (element: Element, currentLevel: number, parentLevel: number) => {
+        if (currentLevel > 5) return;
+
+        Array.from(element.children).forEach(child => {
+          radius.below.push({
+            tagName: child.tagName.toLowerCase(),
+            id: child.id || undefined,
+            className: child.className?.toString().trim() || undefined,
+            dataHook: child.getAttribute('data-hook') || undefined,
+            level: currentLevel,
+            parentLevel,
+          });
+
+          // Recursively collect children, but limit to reasonable amount
+          if (currentLevel < 5 && child.children.length > 0 && child.children.length < 20) {
+            collectBelow(child, currentLevel + 1, radius.below.length - 1);
+          }
+        });
+      };
+
+      collectBelow(el, 1, -1); // -1 indicates direct child of target
+
+      return radius;
+    };
+
     // Original simple selector for backwards compatibility
     let selector = tagName;
     if (id) selector += `#${id}`;
@@ -227,6 +289,7 @@ const startElementSelection = (eventId: string) => {
       selector,
       fullPath: getFullPathWithDataHooks(element),
       dataHooksPath: getAllDataHooksInPath(element),
+      htmlRadius: getHtmlRadius(element),
       xpath: getXPath(element),
       tagName,
       className: className || undefined,
@@ -886,6 +949,94 @@ const SidePanel = () => {
                                                 {`${hook.tagName}[data-hook="${hook.dataHook}"] (level ${hook.level})`}
                                               </p>
                                             ))}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* HTML Radius */}
+                                      {mapping.element.htmlRadius && (
+                                        <div className="mt-2">
+                                          <p
+                                            className={cn(
+                                              'text-xs font-semibold',
+                                              isLight ? 'text-purple-700' : 'text-purple-300',
+                                            )}>
+                                            HTML Radius (5 levels):
+                                          </p>
+                                          <div
+                                            className={cn(
+                                              'mt-1 rounded border p-2 font-mono text-xs',
+                                              isLight ? 'border-gray-300 bg-gray-50' : 'border-gray-600 bg-gray-900',
+                                            )}>
+                                            {/* Above elements */}
+                                            {mapping.element.htmlRadius.above.map((elem, index) => {
+                                              const indent = '  '.repeat(
+                                                mapping.element.htmlRadius!.above.length - index - 1,
+                                              );
+                                              return (
+                                                <div
+                                                  key={`above-${index}`}
+                                                  className={cn(
+                                                    'break-all',
+                                                    isLight ? 'text-gray-600' : 'text-gray-400',
+                                                  )}>
+                                                  {indent}
+                                                  {elem.tagName}
+                                                  {elem.id && `#${elem.id}`}
+                                                  {elem.dataHook && `[data-hook="${elem.dataHook}"]`}
+                                                  {elem.className &&
+                                                    `.${elem.className.split(' ').slice(0, 2).join('.')}`}
+                                                  {' ↓'}
+                                                </div>
+                                              );
+                                            })}
+
+                                            {/* Target element */}
+                                            <div
+                                              className={cn(
+                                                'break-all font-semibold',
+                                                isLight ? 'text-blue-700' : 'text-blue-300',
+                                              )}>
+                                              {'  '.repeat(mapping.element.htmlRadius.above.length)}
+                                              <span className="bg-yellow-200 px-1 text-black">
+                                                {mapping.element.htmlRadius.target.tagName}
+                                                {mapping.element.htmlRadius.target.id &&
+                                                  `#${mapping.element.htmlRadius.target.id}`}
+                                                {mapping.element.htmlRadius.target.dataHook &&
+                                                  `[data-hook="${mapping.element.htmlRadius.target.dataHook}"]`}
+                                                {mapping.element.htmlRadius.target.className &&
+                                                  `.${mapping.element.htmlRadius.target.className.split(' ').slice(0, 2).join('.')}`}
+                                                {' ← TARGET'}
+                                              </span>
+                                            </div>
+
+                                            {/* Below elements */}
+                                            {mapping.element.htmlRadius.below.slice(0, 15).map((elem, index) => {
+                                              const indent = '  '.repeat(
+                                                mapping.element.htmlRadius!.above.length + elem.level,
+                                              );
+                                              return (
+                                                <div
+                                                  key={`below-${index}`}
+                                                  className={cn(
+                                                    'break-all',
+                                                    isLight ? 'text-gray-600' : 'text-gray-400',
+                                                  )}>
+                                                  {indent}
+                                                  {elem.tagName}
+                                                  {elem.id && `#${elem.id}`}
+                                                  {elem.dataHook && `[data-hook="${elem.dataHook}"]`}
+                                                  {elem.className &&
+                                                    `.${elem.className.split(' ').slice(0, 2).join('.')}`}
+                                                </div>
+                                              );
+                                            })}
+                                            {mapping.element.htmlRadius.below.length > 15 && (
+                                              <div
+                                                className={cn('italic', isLight ? 'text-gray-500' : 'text-gray-500')}>
+                                                ... and {mapping.element.htmlRadius.below.length - 15} more elements
+                                              </div>
+                                            )}
                                           </div>
                                         </div>
                                       )}

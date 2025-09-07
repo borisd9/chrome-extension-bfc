@@ -19,6 +19,18 @@ interface ElementSelector {
   text?: string;
   fullPath?: string;
   dataHooksPath?: Array<{ tagName: string; dataHook: string; level: number }>;
+  htmlRadius?: {
+    above: Array<{ tagName: string; id?: string; className?: string; dataHook?: string; level: number }>;
+    target: { tagName: string; id?: string; className?: string; dataHook?: string; text?: string };
+    below: Array<{
+      tagName: string;
+      id?: string;
+      className?: string;
+      dataHook?: string;
+      level: number;
+      parentLevel: number;
+    }>;
+  };
 }
 
 interface EventMapping {
